@@ -592,7 +592,9 @@ This image is a fork of `osixia/openldap` with significant updates. If you're mi
 
 1. **OpenLDAP 2.4 → 2.6**: Major version upgrade with breaking changes
    - **Backend**: Only `mdb` backend is supported. `hdb` and `bdb` backends were removed in OpenLDAP 2.5
-   - **Replication**: `olcMirrorMode` attribute renamed to `olcMultiProvider`
+   - **Replication**:
+   		- `olcMirrorMode` attribute renamed to `olcMultiProvider`
+		- `"#PYTHON2BASH` tag was removed, `LDAP_REPLICATION_HOSTS` value no longer needs it
    - **Commands**: The `-h` and `-p` flags for ldapsearch/ldapadd are deprecated. Use `-H ldap://host` URI format instead
 
 2. **Base Image**: Changed from Debian Buster to Debian Trixie (testing) for OpenLDAP 2.6.x support
