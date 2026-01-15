@@ -427,11 +427,10 @@ Replication options:
   - ldap://ldap2.example.org
 	```
 
-	If you want to set this variable at docker run command add the tag `#PYTHON2BASH:` and convert the yaml in python:
+	If you want to set this variable at docker run command:
 
-		docker run --env LDAP_REPLICATION_HOSTS="#PYTHON2BASH:['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.0.0
+		docker run --env LDAP_REPLICATION_HOSTS="['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.0.0
 
-	To convert yaml to python online: https://yaml-online-parser.appspot.com/
 
 Other environment variables:
 - **KEEP_EXISTING_CONFIG**: Do not change the ldap config. Defaults to `false`
