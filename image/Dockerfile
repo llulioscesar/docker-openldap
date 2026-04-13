@@ -1,5 +1,6 @@
 # OpenLDAP Docker Image
 # Based on Debian Trixie with OpenLDAP 2.6.x
+# Optimized: packages upgraded, unnecessary files removed, reduced attack surface
 FROM debian:trixie-slim
 
 ARG LDAP_OPENLDAP_GID
@@ -10,9 +11,10 @@ ARG LDAP_OPENLDAP_UID
 RUN if [ -z "${LDAP_OPENLDAP_GID}" ]; then groupadd -g 911 -r openldap; else groupadd -r -g ${LDAP_OPENLDAP_GID} openldap; fi \
     && if [ -z "${LDAP_OPENLDAP_UID}" ]; then useradd -u 911 -r -g openldap openldap; else useradd -r -g openldap -u ${LDAP_OPENLDAP_UID} openldap; fi
 
-# Install OpenLDAP and required packages
+# Install OpenLDAP and required packages, upgrade all, then clean aggressively
 RUN echo "path-include /usr/share/doc/krb5*" >> /etc/dpkg/dpkg.cfg.d/docker \
     && apt-get -y update \
+    && apt-get -y upgrade \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates \
     ldap-utils \
@@ -26,10 +28,11 @@ RUN echo "path-include /usr/share/doc/krb5*" >> /etc/dpkg/dpkg.cfg.d/docker \
     slapd \
     slapd-contrib \
     krb5-kdc-ldap \
-    procps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && rm -rf /var/lib/ldap/* /etc/ldap/slapd.d/*
+    && rm -rf /var/lib/ldap/* /etc/ldap/slapd.d/* \
+    && rm -rf /usr/share/man /usr/share/info /usr/share/lintian /usr/share/linda \
+    && rm -rf /var/cache/debconf/*-old /var/log/apt /var/log/dpkg.log
 
 # Create directory structure
 RUN mkdir -p /container/service/slapd/assets \
@@ -61,6 +64,3 @@ ENV CONTAINER_SERVICE_DIR=/container/service \
 
 # Entrypoint
 ENTRYPOINT ["/container/tool/run"]
-
-# Put ldap config and database dir in a volume to persist data.
-# VOLUME /etc/ldap/slapd.d /var/lib/ldap
