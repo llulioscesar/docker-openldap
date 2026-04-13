@@ -427,11 +427,10 @@ Replication options:
   - ldap://ldap2.example.org
 	```
 
-	If you want to set this variable at docker run command add the tag `#PYTHON2BASH:` and convert the yaml in python:
+	If you want to set this variable at docker run command:
 
-		docker run --env LDAP_REPLICATION_HOSTS="#PYTHON2BASH:['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.0.0
+		docker run --env LDAP_REPLICATION_HOSTS="['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.0.0
 
-	To convert yaml to python online: https://yaml-online-parser.appspot.com/
 
 Other environment variables:
 - **KEEP_EXISTING_CONFIG**: Do not change the ldap config. Defaults to `false`
@@ -593,7 +592,9 @@ This image is a fork of `osixia/openldap` with significant updates. If you're mi
 
 1. **OpenLDAP 2.4 → 2.6**: Major version upgrade with breaking changes
    - **Backend**: Only `mdb` backend is supported. `hdb` and `bdb` backends were removed in OpenLDAP 2.5
-   - **Replication**: `olcMirrorMode` attribute renamed to `olcMultiProvider`
+   - **Replication**:
+   		- `olcMirrorMode` attribute renamed to `olcMultiProvider`
+		- `"#PYTHON2BASH` tag was removed, `LDAP_REPLICATION_HOSTS` value no longer needs it
    - **Commands**: The `-h` and `-p` flags for ldapsearch/ldapadd are deprecated. Use `-H ldap://host` URI format instead
 
 2. **Base Image**: Changed from Debian Buster to Debian Trixie (testing) for OpenLDAP 2.6.x support
