@@ -3,7 +3,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/startcodex/openldap.svg)](https://hub.docker.com/r/startcodex/openldap/)
 [![Docker Stars](https://img.shields.io/docker/stars/startcodex/openldap.svg)](https://hub.docker.com/r/startcodex/openldap/)
 
-Latest release: 2.0.0 - OpenLDAP 2.6.x (Debian Trixie) -  [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/startcodex/openldap/)
+Latest release: 2.1.0 - OpenLDAP 2.6.x (Debian Trixie) -  [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/startcodex/openldap/)
 
 **A docker image to run OpenLDAP.**
 
@@ -40,7 +40,7 @@ Latest release: 2.0.0 - OpenLDAP 2.6.x (Debian Trixie) -  [Changelog](CHANGELOG.
 			- [Docker Secrets](#docker-secrets)
 			- [Make your own image or extend this image](#make-your-own-image-or-extend-this-image)
 	- [Advanced User Guide](#advanced-user-guide)
-		- [Extend startcodex/openldap:2.0.0 image](#extend-startcodexopenldap200-image)
+		- [Extend startcodex/openldap:2.1.0 image](#extend-startcodexopenldap200-image)
 		- [Make your own openldap image](#make-your-own-openldap-image)
 		- [Tests](#tests)
 		- [Kubernetes](#kubernetes)
@@ -64,13 +64,13 @@ If you find this image useful here's how you can help:
 Run OpenLDAP docker image:
 
 ```sh
-docker run --name my-openldap-container --detach startcodex/openldap:2.0.0
+docker run --name my-openldap-container --detach startcodex/openldap:2.1.0
 ```
 
 Do not forget to add the port mapping for both port 389 and 636 if you wish to access the ldap server from another machine.
 
 ```sh
-docker run -p 389:389 -p 636:636 --name my-openldap-container --detach startcodex/openldap:2.0.0
+docker run -p 389:389 -p 636:636 --name my-openldap-container --detach startcodex/openldap:2.1.0
 ```
 
 You can also use custom ports by setting the `LDAP_PORT` and `LDAPS_PORT` environment variables:
@@ -79,7 +79,7 @@ You can also use custom ports by setting the `LDAP_PORT` and `LDAPS_PORT` enviro
 docker run -p 3389:3389 -p 6636:6636 \
 	--env LDAP_PORT=3389 \
 	--env LDAPS_PORT=6636 \
-	--name my-openldap-container --detach startcodex/openldap:2.0.0
+	--name my-openldap-container --detach startcodex/openldap:2.1.0
 ```
 
 Either command starts a new container with OpenLDAP running inside. Let's make the first search in our LDAP container:
@@ -122,7 +122,7 @@ docker run \
 	--env LDAP_ORGANISATION="My Company" \
 	--env LDAP_DOMAIN="my-company.com" \
 	--env LDAP_ADMIN_PASSWORD="JonSn0w" \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 #### Data persistence
@@ -187,12 +187,12 @@ argument to entrypoint if you don't want to overwrite them.
 # single file example:
 docker run \
 	--volume ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif \
-	startcodex/openldap:2.0.0 --copy-service
+	startcodex/openldap:2.1.0 --copy-service
 
 # directory example:
 docker run \
 	--volume ./ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom \
-	startcodex/openldap:2.0.0 --copy-service
+	startcodex/openldap:2.1.0 --copy-service
 ```
 
 #### Seed from internal path
@@ -234,7 +234,7 @@ simply mount this directories as a volume to `/var/lib/ldap` and `/etc/ldap/slap
 docker run \
 	--volume /data/slapd/database:/var/lib/ldap \
 	--volume /data/slapd/config:/etc/ldap/slapd.d \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 You can also use data volume containers. Please refer to:
@@ -258,7 +258,7 @@ If you are looking for a simple solution to administrate your ldap server you ca
 By default, TLS is already configured and enabled, certificate is created using container hostname (it can be set by docker run --hostname option eg: ldap.example.org).
 
 ```sh
-docker run --hostname ldap.my-company.com --detach startcodex/openldap:2.0.0
+docker run --hostname ldap.my-company.com --detach startcodex/openldap:2.1.0
 ```
 
 #### Use your own certificate
@@ -272,7 +272,7 @@ docker run \
 	--env LDAP_TLS_CRT_FILENAME=my-ldap.crt \
 	--env LDAP_TLS_KEY_FILENAME=my-ldap.key \
 	--env LDAP_TLS_CA_CRT_FILENAME=the-ca.crt \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 Other solutions are available please refer to the [Advanced User Guide](#advanced-user-guide)
@@ -280,7 +280,7 @@ Other solutions are available please refer to the [Advanced User Guide](#advance
 #### Disable TLS
 Add --env LDAP_TLS=false to the run command:
 
-	docker run --env LDAP_TLS=false --detach startcodex/openldap:2.0.0
+	docker run --env LDAP_TLS=false --detach startcodex/openldap:2.1.0
 
 ### Multi master replication
 
@@ -289,11 +289,11 @@ Add --env LDAP_TLS=false to the run command:
 Quick example, with the default config.
 
 	#Create the first ldap server, save the container id in LDAP_CID and get its IP:
-	LDAP_CID=$(docker run --hostname ldap.example.org --env LDAP_REPLICATION=true --detach startcodex/openldap:2.0.0)
+	LDAP_CID=$(docker run --hostname ldap.example.org --env LDAP_REPLICATION=true --detach startcodex/openldap:2.1.0)
 	LDAP_IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $LDAP_CID)
 
 	#Create the second ldap server, save the container id in LDAP2_CID and get its IP:
-	LDAP2_CID=$(docker run --hostname ldap2.example.org --env LDAP_REPLICATION=true --detach startcodex/openldap:2.0.0)
+	LDAP2_CID=$(docker run --hostname ldap2.example.org --env LDAP_REPLICATION=true --detach startcodex/openldap:2.1.0)
 	LDAP2_IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $LDAP2_CID)
 
 	#Add the pair "ip hostname" to /etc/hosts on each containers,
@@ -329,7 +329,7 @@ You may have some problems with mounted files on some systems. The startup scrip
 
 To fix that run the container with `--copy-service` argument :
 
-		docker run [your options] startcodex/openldap:2.0.0 --copy-service
+		docker run [your options] startcodex/openldap:2.1.0 --copy-service
 
 ### Debug
 
@@ -339,13 +339,13 @@ Available levels are: `none`, `error`, `warning`, `info`, `debug` and `trace`.
 Example command to run the container in `debug` mode:
 
 ```sh
-docker run --detach startcodex/openldap:2.0.0 --loglevel debug
+docker run --detach startcodex/openldap:2.1.0 --loglevel debug
 ```
 
 See all command line options:
 
 ```sh
-docker run startcodex/openldap:2.0.0 --help
+docker run startcodex/openldap:2.1.0 --help
 ```
 
 ## Environment Variables
@@ -418,7 +418,7 @@ Replication options:
 		--env LDAP_REPLICATION=true \
 		--env LDAP_REPLICATION_CONFIG_SYNCPROV='binddn="cn=admin,cn=config" bindmethod=simple credentials=$LDAP_CONFIG_PASSWORD searchbase="cn=config" type=refreshAndPersist retry="60 +" timeout=1' \
 		--env LDAP_REPLICATION_DB_SYNCPROV='binddn="cn=admin,$LDAP_BASE_DN" bindmethod=simple credentials=$LDAP_ADMIN_PASSWORD searchbase="$LDAP_BASE_DN" type=refreshAndPersist interval=00:00:00:10 retry="60 +" timeout=1' \
-		--detach startcodex/openldap:2.0.0
+		--detach startcodex/openldap:2.1.0
 	```
 
 - **LDAP_REPLICATION_HOSTS**: list of replication hosts, must contain the current container hostname set by --hostname on docker run command. Defaults to :
@@ -429,7 +429,7 @@ Replication options:
 
 	If you want to set this variable at docker run command:
 
-		docker run --env LDAP_REPLICATION_HOSTS="['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.0.0
+		docker run --env LDAP_REPLICATION_HOSTS="['ldap://ldap.example.org','ldap://ldap2.example.org']" --detach startcodex/openldap:2.1.0
 
 
 Other environment variables:
@@ -456,7 +456,7 @@ docker run \
 	--env LDAP_ORGANISATION="My company" \
 	--env LDAP_DOMAIN="my-company.com" \
 	--env LDAP_ADMIN_PASSWORD="JonSn0w" \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 Be aware that environment variable added in command line will be available at any time
@@ -470,7 +470,7 @@ For example if your environment files **my-env.yaml** and **my-env.startup.yaml*
 ```sh
 docker run \
 	--volume /data/ldap/environment:/container/environment/01-custom \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 Take care to link your environment files folder to `/container/environment/XX-somedir` (with XX < 99 so they will be processed before default environment files) and not  directly to `/container/environment` because this directory contains predefined baseimage environment files to fix container environment (INITRD, LANG, LANGUAGE and LC_CTYPE).
@@ -480,7 +480,7 @@ Note: the container will try to delete the **\*.startup.yaml** file after the en
 ```sh
 docker run \
 	--volume /data/ldap/environment/my-env.yaml:/container/environment/01-custom/env.yaml \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 #### Docker Secrets
@@ -494,7 +494,7 @@ docker run \
 	--env LDAP_ORGANISATION="My company" \
 	--env LDAP_DOMAIN="my-company.com" \
 	--env LDAP_ADMIN_PASSWORD_FILE=/run/secrets/authentication_admin_pw \
-	--detach startcodex/openldap:2.0.0
+	--detach startcodex/openldap:2.1.0
 ```
 
 Currently this is only supported for LDAP_ADMIN_PASSWORD, LDAP_CONFIG_PASSWORD, LDAP_READONLY_USER_PASSWORD
@@ -505,14 +505,14 @@ This is the best solution if you have a private registry. Please refer to the [A
 
 ## Advanced User Guide
 
-### Extend startcodex/openldap:2.0.0 image
+### Extend startcodex/openldap:2.1.0 image
 
 If you need to add your custom TLS certificate, bootstrap config or environment files the easiest way is to extends this image.
 
 Dockerfile example:
 
 ```dockerfile
-FROM startcodex/openldap:2.0.0
+FROM startcodex/openldap:2.1.0
 LABEL maintainer="Your Name <your@name.com>"
 
 ADD bootstrap /container/service/slapd/assets/config/bootstrap
@@ -619,7 +619,7 @@ This image is a fork of `osixia/openldap` with significant updates. If you're mi
    # Old
    image: osixia/openldap:1.5.0
    # New
-   image: startcodex/openldap:2.0.0
+   image: startcodex/openldap:2.1.0
    ```
 
 4. **Test thoroughly** before deploying to production, especially:
