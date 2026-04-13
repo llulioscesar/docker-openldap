@@ -1,7 +1,7 @@
 version: "2"
 services:
   openldap:
-    image: startcodex/openldap:2.0.0
+    image: startcodex/openldap:2.1.0
     container_name: openldap
     environment:
       LDAP_LOG_LEVEL: "256"

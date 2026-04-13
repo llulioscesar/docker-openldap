@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ldap
-          image: startcodex/openldap:2.0.0
+          image: startcodex/openldap:2.1.0
           volumeMounts:
             - name: ldap-data
               mountPath: /var/lib/ldap
